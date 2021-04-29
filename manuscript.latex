@@ -1,0 +1,197 @@
+\documentclass[
+$if(fontsize)$
+  $fontsize$,
+$endif$
+$if(lang)$
+  $babel-lang$,
+$endif$
+$if(papersize)$
+  $papersize$paper,
+$endif$
+$if(beamer)$
+  ignorenonframetext,
+$if(handout)$
+  handout,
+$endif$
+$if(aspectratio)$
+  aspectratio=$aspectratio$,
+$endif$
+$endif$
+$for(classoption)$
+  $classoption$$sep$,
+$endfor$
+]{baderart}
+
+% Packages used by `huxreg`
+\usepackage[english]{babel}
+%\usepackage{lmodern}
+%\usepackage{amssymb,amsmath}
+%\usepackage{ifxetex,ifluatex}
+%\usepackage{fixltx2e} % provides \textsubscript
+%\usepackage{color}
+%\usepackage{fancyvrb}
+%\usepackage{array}
+%\usepackage{caption}
+%\usepackage{graphicx}
+%\usepackage{siunitx}
+%\usepackage[table]{xcolor}
+%\usepackage{multirow}
+\usepackage{calc}
+%\usepackage{tabularx}
+%\usepackage{rotating}
+\usepackage{adjustbox}
+\usepackage{hhline}
+\usepackage{threeparttable}
+
+\providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
+\providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
+\providecommand{\huxtpad}[1]{\rule{0pt}{#1}}
+\providecommand{\huxbpad}[1]{\rule[-#1]{0pt}{#1}}
+
+\DeclareSymbolFont{letters}{OML}{ztmcm}{m}{it}
+\DeclareSymbolFontAlphabet{\mathnormal}{letters}
+
+$if(graphics)$
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+$endif$
+
+% Bibliography (copied from default.latex)
+$if(natbib)$
+\usepackage[$natbiboptions$]{natbib}
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$
+$if(biblatex)$
+\usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
+$for(bibliography)$
+\addbibresource{$bibliography$}
+$endfor$
+$endif$
+$if(csl-refs)$
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+$endif$
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+$if(title)$
+\title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
+$endif$
+
+\makeatletter
+$if(shorttitle)$
+\shorttitle{$shorttitle$}
+$else$
+\shorttitle{\@title}
+$endif$
+\makeatother
+% \author{
+% $for(author)$
+% $author$
+% $sep$ \and 
+% $endfor$
+% }
+\author{
+$for(author)$
+$if(author.name)$
+$author.name$$if(author.affiliation)$\\$author.affiliation$$endif$
+$else$
+$author$
+$endif$ \and
+$endfor$
+}
+$if(nodate)$
+\date{}
+$else$
+  $if(date)$
+    \date{$date$}
+  $endif$
+$endif$
+
+$if(unpub)$
+\unpubnote{\noindent Unpublished manuscript: please contact author for latest version before citing.}
+$endif$
+
+%%%% pandoc-fignos: required package
+\usepackage{caption}
+
+%% pandoc-fignos: environment to disable figure caption prefixes
+\makeatletter
+\newcounter{figno}
+\newenvironment{fignos:no-prefix-figure-caption}{
+\caption@ifcompatibility{}{
+  \let\oldthefigure\thefigure
+  \let\oldtheHfigure\theHfigure
+  \renewcommand{\thefigure}{figno:\thefigno}
+  \renewcommand{\theHfigure}{figno:\thefigno}
+  \stepcounter{figno}
+  \captionsetup{labelformat=empty}
+}
+}{
+\caption@ifcompatibility{}{
+  \captionsetup{labelformat=default}
+  \let\thefigure\oldthefigure
+  \let\theHfigure\oldtheHfigure
+  \addtocounter{figure}{-1}
+}
+}
+\makeatother
+
+    
+\begin{document}
+
+\maketitle
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\keywords{$for(keywords)$$keywords$$sep$, $endfor$\\
+$if(jel)$\textbf{JEL codes.} $for(jel)$$jel$$sep$, $endfor$$endif$}
+\end{abstract}
+$endif$
+
+$if(doublespace)$\doublespace$endif$
+
+\noindent
+$body$
+
+
+$for(include-after)$
+$include-after$
+
+$endfor$
+
+
+
+\end{document}
