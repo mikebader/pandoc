@@ -1,3 +1,11 @@
+% Pandoc template to typeset documents using custom LaTeX
+% manuscript class
+% Author: Mike Bader
+
+% Standard pandoc options for pdf
+% (`fontsize`, `lang`, `papersize`, `aspectratio` may all be 
+% entered as their own options, other options should appear
+% as items in list classoptions)
 \documentclass[
 $if(fontsize)$
   $fontsize$,
@@ -22,27 +30,7 @@ $for(classoption)$
 $endfor$
 ]{baderart}
 
-% Packages used by `huxreg`
-\usepackage[english]{babel}
-%\usepackage{lmodern}
-%\usepackage{amssymb,amsmath}
-%\usepackage{ifxetex,ifluatex}
-%\usepackage{fixltx2e} % provides \textsubscript
-%\usepackage{color}
-%\usepackage{fancyvrb}
-%\usepackage{array}
-%\usepackage{caption}
-%\usepackage{graphicx}
-%\usepackage{siunitx}
-%\usepackage[table]{xcolor}
-%\usepackage{multirow}
-\usepackage{calc}
-%\usepackage{tabularx}
-%\usepackage{rotating}
-\usepackage{adjustbox}
-\usepackage{hhline}
-\usepackage{threeparttable}
-
+% Commands used by `huxreg` command in R
 \providecommand{\huxb}[2]{\arrayrulecolor[RGB]{#1}\global\arrayrulewidth=#2pt}
 \providecommand{\huxvb}[2]{\color[RGB]{#1}\vrule width #2pt}
 \providecommand{\huxtpad}[1]{\rule{0pt}{#1}}
@@ -53,21 +41,23 @@ $endfor$
 
 $if(graphics)$
 \usepackage{graphicx}
-\makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
-\makeatother
-% Scale images if necessary, so that they will not overflow the page
-% margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, ...]{}
-\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-% Set default figure placement to htbp
-\makeatletter
-\def\fps@figure{htbp}
-\makeatother
+  \makeatletter
+  \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+  \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+  \makeatother
+  % Scale images if necessary, so that they will not overflow the page
+  % margins by default, and it is still possible to overwrite the defaults
+  % using explicit options in \includegraphics[width, height, ...]{}
+  \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+  % Set default figure placement to htbp
+  \makeatletter
+  \def\fps@figure{htbp}
+  \makeatother
 $endif$
 
-% Bibliography (copied from default.latex)
+%% BIBLIOGRAPHY
+%% (copied from default.latex)
+%% Required if using citeproc
 $if(natbib)$
 \usepackage[$natbiboptions$]{natbib}
 \bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
@@ -101,14 +91,21 @@ $if(csl-refs)$
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 $endif$
 
-
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
+
+%% DOCUMENT INFORMATION
+%% The following include information in the preamble of the 
+%% LaTeX document
+
+%% Defines title based on `title` entry in YAML block
 $if(title)$
 \title{$title$$if(thanks)$\thanks{$thanks$}$endif$}
 $endif$
 
+%% Defines subtitle based on `subtitle` entry YAML block, or
+%% sets subtitle to `title` if not defined 
 \makeatletter
 $if(shorttitle)$
 \shorttitle{$shorttitle$}
@@ -116,12 +113,11 @@ $else$
 \shorttitle{\@title}
 $endif$
 \makeatother
-% \author{
-% $for(author)$
-% $author$
-% $sep$ \and 
-% $endfor$
-% }
+
+%% Defines authors
+%% `author` entry in YAML block may either be single author or 
+%% list of authors that may include `name` and `affiliation` 
+%% dictionary
 \author{
 $for(author)$
 $if(author.name)$
@@ -131,6 +127,11 @@ $author$
 $endif$ \and
 $endfor$
 }
+
+%% Defines date
+%% if option `nodate` is set to 'true', no date is printed,
+%% otherwise defines date to be value in `date` field (if empty)
+%% defaults to current date
 $if(nodate)$
 \date{}
 $else$
@@ -139,11 +140,16 @@ $else$
   $endif$
 $endif$
 
+%% Sets note that paper is unpublished
 $if(unpub)$
 \unpubnote{\noindent Unpublished manuscript: please contact author for latest version before citing.}
 $endif$
 
-%%%% pandoc-fignos: required package
+%% Defines keywords
+\keywords{$for(keywords)$$keywords$$sep$, $endfor$}
+
+%% SETTINGS REQUIRED FOR pandoc-xnos
+%% pandoc-fignos: required package
 \usepackage{caption}
 
 %% pandoc-fignos: environment to disable figure caption prefixes
@@ -169,18 +175,26 @@ $endif$
 \makeatother
 
     
+%% BEGIN LATEX DOCUMENT 
 \begin{document}
 
+%% CREATE TITLE
 \maketitle
 
+%% ABSTRACT
+%% If `abstract` option is defined, include abstract
 $if(abstract)$
 \begin{abstract}
 $abstract$
-\keywords{$for(keywords)$$keywords$$sep$, $endfor$\\
-$if(jel)$\textbf{JEL codes.} $for(jel)$$jel$$sep$, $endfor$$endif$}
+
+%% Include JEL codes if `jel` is defined
+%% (`jel` option should be a list of JEL codes)
+%% https://www.aeaweb.org/econlit/jelCodes.php
+$if(jel)$\\\noindent\textbf{JEL codes.} $for(jel)$$jel$$sep$, $endfor$$endif$
 \end{abstract}
 $endif$
 
+%% Set spacing to double spacing if `doublespace` option is set to 'true'
 $if(doublespace)$\doublespace$endif$
 
 \noindent
