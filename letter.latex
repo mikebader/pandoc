@@ -1,0 +1,117 @@
+% Pandoc template to typeset documents using custom LaTeX
+% homework class
+% Author: Mike Bader
+
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode$for(hyperrefoptions)$,$hyperrefoptions$$endfor$}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+$if(colorlinks)$
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+$endif$
+% Standard pandoc options for pdf
+% (`fontsize`, `lang`, `papersize`, `aspectratio` may all be 
+% entered as their own options, other options should appear
+% as items in list classoptions)
+\documentclass[
+$if(fontsize)$
+  $fontsize$,
+$endif$
+$if(lang)$
+  $babel-lang$,
+$endif$
+$if(papersize)$
+  $papersize$paper,$else$letterpaper,
+$endif$
+$if(signed)$
+  sign,
+$endif$
+$for(classoption)$
+  $classoption$$sep$,
+$endfor$
+]{university_letter}
+
+%% BIBLIOGRAPHY
+%% (copied from default.latex)
+%% Required if using citeproc
+$if(natbib)$
+\usepackage[$natbiboptions$]{natbib}
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$
+$if(biblatex)$
+\usepackage[$if(biblio-style)$style=$biblio-style$,$endif$$for(biblatexoptions)$$biblatexoptions$$sep$,$endfor$]{biblatex}
+$for(bibliography)$
+\addbibresource{$bibliography$}
+$endfor$
+$endif$
+$if(csl-refs)$
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+$endif$
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+%% DATE
+$if(date)$
+  \date{$date$}
+$else$
+  \date{\today}
+$endif$
+
+%% HEADER
+$if(header-includes)$
+$for(header-includes)$
+$header-includes$
+$endfor$
+$endif$
+
+\newcommand{\close}{\closing{$if(closing)$$closing$$else$Sincerely,$endif$}}
+    
+%% BEGIN LATEX DOCUMENT 
+\begin{document}
+
+\begin{letter}{
+  $if(recipient)$$recipient$$endif$
+}
+
+\opening{$if(salutation)$$salutation$$else$To Whom it May Concern:$endif$}
+
+\noindent
+$body$
+
+% Post-signature elements
+% If there is not bibliography, the closing and signature are automatically 
+% added, otherwise use \close
+
+$if(bibliography)$$else$\close$endif$
+$if(cc)$\\[2em]\cc{$cc$}$endif$
+$if(enclosure)$\encl{$enclosure$}$endif$
+
+\end{letter}
+
+$for(include-after)$
+$include-after$
+$endfor$
+
+
+
+\end{document}
