@@ -146,7 +146,7 @@ $if(unpub)$
 $endif$
 
 %% Defines keywords
-\keywords{$for(keywords)$$keywords$$sep$, $endfor$}
+$if(keywords)$\keywords{$for(keywords)$$keywords$$sep$, $endfor$}$endif$
 
 %% SETTINGS REQUIRED FOR pandoc-xnos
 %% pandoc-fignos: required package
