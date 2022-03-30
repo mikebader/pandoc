@@ -142,7 +142,10 @@ $endif$
 
 %% Sets note that paper is unpublished
 $if(unpub)$
-\unpubnote{\noindent Unpublished manuscript: please contact author for latest version before citing.}
+  $if(unpub-note)$\unpubnote{\noindent $unpub-note$}
+  $else$
+    \unpubnote{\noindent Unpublished manuscript: please contact author for latest version before citing.}
+  $endif$
 $endif$
 
 %% Defines keywords
