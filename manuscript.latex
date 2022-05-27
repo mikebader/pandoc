@@ -144,9 +144,12 @@ $endif$
 $if(unpub)$
   $if(unpub-note)$\unpubnote{\noindent $unpub-note$}
   $else$
-    \unpubnote{\noindent Unpublished manuscript: please contact author for latest version before citing.}
+    \unpubnote{\noindent Unpublished manuscript: please contact author$if(author/allbutlast)$s$endif$ for latest version before citing.
+    }
   $endif$
 $endif$
+%% Help on pipe for pluralizing: 
+%% https://stackoverflow.com/a/67609365/12586249
 
 %% Defines keywords
 $if(keywords)$\keywords{$for(keywords)$$keywords$$sep$, $endfor$}$endif$
