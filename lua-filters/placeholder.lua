@@ -10,14 +10,13 @@
 -- inside single square braces `[]`. Other formats will render the placeholder
 -- using strong formatting inside  double curly braces `{{}}`. The `\TK` command
 -- will render the text TK and the `\needcite` command will render the text
--- NEED CITATION. 
+-- CITE. 
 --
 -- Both \TK and \needcite may contain optional text inside square brackets
 -- after the command (following LaTeX syntax; e.g., `\TK[Need Example]`). The
 -- text of the optional argument will be rendered after the placeholder title
--- (TK or NEED CITATION) using the same formatting. This may be useful for
--- writing out what text needs to be added or which citation needs to be 
--- included. 
+-- (TK or CITE) using the same formatting. This may be useful for writing out
+-- what text needs to be added or which citation needs to be included. 
 
 -- Define variables with text to be included in header for HTML and LaTeX
 css = [[
@@ -40,7 +39,7 @@ function addHeaderIncludes (meta)
 
 	if FORMAT:match 'latex' then hilang = latex else hilang = css end
 	local current = meta['header-includes'] or pandoc.MetaList{meta['header-includes']}
-	current[#current+1] = pandoc.MetaBlocks(pandoc.RawBlock(FORMAT, hilang))
+	current[#current+1] = pandoc.RawBlock(FORMAT, hilang)
 	meta['header-includes'] = current
 	return meta
 end
@@ -55,7 +54,7 @@ function RawInline (elem)
 		if cmd == "TK" or cmd == "needcite" then 
 
 			-- Construct text inside of note
-			if cmd == "needcite" then cmd = "NEED CITATION" end
+			if cmd == "needcite" then cmd = "CITE" end
 			_, _, det = string.find(raw, "%[(.-)]")
 			if det ~= nil then 
 				txt = (cmd .. ": " .. det)
