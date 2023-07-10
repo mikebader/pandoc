@@ -182,6 +182,8 @@ $if(keywords)$\keywords{$for(keywords)$$keywords$$sep$, $endfor$}$endif$
 
     
 %% BEGIN LATEX DOCUMENT 
+
+$header-includes$
 \begin{document}
 
 %% CREATE TITLE
